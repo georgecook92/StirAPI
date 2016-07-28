@@ -21,9 +21,11 @@ exports.signin = function(req,res,next) {
 exports.signup = function(req,res,next) {
   const email = req.body.email;
   const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
 
-  if(!email || !password) {
-    return res.status(422).send( { error: "Email and Password must be provided" } );
+  if(!email || !password || !firstName || !lastName ) {
+    return res.status(422).send( { error: "All fields must be provided" } );
   }
 
   //see if a user with the given email exists
@@ -39,7 +41,9 @@ exports.signup = function(req,res,next) {
     //if no user exists - create and save the user
     const user = new User({
       email: email,
-      password: password
+      password: password,
+      firstName: firstName,
+      lastName: lastName
     });
 
     user.save( function(err) {
