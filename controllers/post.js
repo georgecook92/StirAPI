@@ -32,7 +32,7 @@ exports.sendPost = function(req,res,next) {
 }
 
 exports.getPosts = function(req,res,next) {
-  const user_id = req.body.user_id;
+  const user_id = req.query.user_id;
   Post.find({"user_id": user_id}, function(err,result) {
     res.send(result);
   });
