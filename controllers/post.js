@@ -45,3 +45,10 @@ exports.getPosts = function(req,res,next) {
     res.send(posts);
   });
 }
+
+exports.getPost = function(req,res,next) {
+  const post_id = req.params.post_id;
+  Post.find({"_id": post_id}, function(err,result) {
+    res.send(result);
+  });
+}
