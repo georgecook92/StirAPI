@@ -39,6 +39,6 @@ exports.getPosts = function(req,res,next) {
       _id: result._id,
       offline: result.offline
     }
-    res.send(posts);
+    res.send(result);
   });
 }
