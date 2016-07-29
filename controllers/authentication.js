@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Post = require('../models/post');
 const jwt = require('jwt-simple');
 const config = require('../config');
 
@@ -14,7 +15,14 @@ exports.signin = function(req,res,next) {
 
   //req.user comes from the done method in passport local
 
-  res.send({ token: tokenForUser(req.user) });
+  console.log(req.user);
+
+  res.send({ token: tokenForUser(req.user),
+    user_id: req.user.id,
+    email: req.user.email,
+    forename: req.user.firstName,
+    surname: req.user.lastName
+  });
 }
 
 
@@ -46,20 +54,18 @@ exports.signup = function(req,res,next) {
       lastName: lastName
     });
 
-    user.save( function(err) {
+    user.save( function(err,userObj) {
       if (err) { return next(err); }
 
       //respond to request indicating it was succesful
-      res.json({token: tokenForUser(user)});
+      res.json({token: tokenForUser(user),
+        user_id: userObj.id,
+        email: userObj.email,
+        firstName: userObj.firstName,
+        lastName: userObj.lastName
+      });
 
     } );
 
   });
-
-
-
-
-
-
-
 }
