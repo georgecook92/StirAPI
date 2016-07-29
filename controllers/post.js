@@ -9,7 +9,7 @@ exports.sendPost = function(req,res,next) {
   if(!title || !user_id || !content || !offline ) {
     console.log('title', title);
     console.log('id', user_id);
-    console.log('text', text);
+    console.log('text', content);
     console.log('offline', offline);
     return res.status(422).send( { error: "All fields must be provided" } );
   }
@@ -17,7 +17,7 @@ exports.sendPost = function(req,res,next) {
   const post = new Post({
     title: title,
     user_id: user_id,
-    test: content,
+    text: content,
     offline: offline
   });
 
