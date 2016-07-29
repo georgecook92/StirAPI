@@ -34,11 +34,14 @@ exports.sendPost = function(req,res,next) {
 exports.getPosts = function(req,res,next) {
   const user_id = req.query.user_id;
   Post.find({"user_id": user_id}, function(err,result) {
-    const posts = {
-      title: result.title,
-      _id: result._id,
-      offline: result.offline
+    const posts = [];
+    for (var i = 0; i < result.length; i++) {
+      var obj = {};
+      obj.title = result[i].title;
+      obj._id = result[i]._id;
+      obj.offline = result[i].offline;
+      posts.push(obj);
     }
-    res.send(result);
+    res.send(posts);
   });
 }
