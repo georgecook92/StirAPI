@@ -15,6 +15,8 @@ module.exports = function(app) {
 
   app.post('/signup', Authentication.signup);
 
+  app.get('/getPosts', requireAuth, Post.getPosts);
+
   app.post('/sendPost', requireAuth, Post.sendPost);
 
 }
