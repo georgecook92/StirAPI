@@ -30,3 +30,8 @@ exports.sendPost = function(req,res,next) {
   } );
 
 }
+
+exports.getPosts = function(req,res,next) {
+  const user_id = req.body.user_id;
+  // Post.find({user})
+}
