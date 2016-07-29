@@ -7,6 +7,10 @@ exports.sendPost = function(req,res,next) {
   const offline = req.body.offline;
 
   if(!title || !user_id || !content || !offline ) {
+    console.log('title', title);
+    console.log('id', user_id);
+    console.log('text', text);
+    console.log('offline', offline);
     return res.status(422).send( { error: "All fields must be provided" } );
   }
 
