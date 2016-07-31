@@ -43,6 +43,7 @@ exports.getPosts = function(req,res,next) {
       obj.offline = result[i].offline;
       posts.push(obj);
     }
+    console.log('posts sent back from server: ', posts);
     res.send(posts);
   });
 }
