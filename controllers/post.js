@@ -33,6 +33,7 @@ exports.sendPost = function(req,res,next) {
 
 exports.getPosts = function(req,res,next) {
   const user_id = req.get('user_id');
+  console.log('user id is', user_id);
   Post.find({"user_id": user_id}, function(err,result) {
     const posts = [];
     for (var i = 0; i < result.length; i++) {
