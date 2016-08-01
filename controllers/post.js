@@ -32,7 +32,7 @@ exports.sendPost = function(req,res,next) {
 }
 
 exports.getPosts = function(req,res,next) {
-  const user_id = req.get.params.user_id;
+  const user_id = req.params.user_id;
   console.log('user id is', user_id);
   Post.find({"user_id": user_id}, function(err,result) {
     const posts = [];
