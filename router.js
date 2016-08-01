@@ -17,7 +17,7 @@ module.exports = function(app) {
 
   app.get('/getPosts/:post_id', requireAuth, Post.getPost);
   app.get('/getPosts', requireAuth, Post.getPosts);
-  app.post('/changeOfflineStatus', requireAuth, Post.changeOfflineStatus);
+  app.put('/changeOfflineStatus', requireAuth, Post.changeOfflineStatus);
 
   app.post('/sendPost', requireAuth, Post.sendPost);
 
