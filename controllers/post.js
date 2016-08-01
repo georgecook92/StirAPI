@@ -42,6 +42,8 @@ exports.getPosts = function(req,res,next) {
       obj.title = result[i].title;
       obj._id = result[i]._id;
       obj.offline = result[i].offline;
+      obj.user_id = result[i].user_id;
+      obj.text = result[i].text;
       posts.push(obj);
     }
     console.log('posts sent back from server: ', posts);
