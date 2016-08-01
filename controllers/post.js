@@ -58,7 +58,7 @@ exports.getPost = function(req,res,next) {
 exports.changeOfflineStatus = function(req,res,next) {
   const post_id = req.params.post_id;
   const offlineStatus = req.params.offlineStatus;
-  Post.update( { "_id": post_id }, {$set : { offline: offlineStatus} }, {new:true} , function(err,doc) {
+  Post.findOneAndUpdate( { "_id": post_id }, {$set : { offline: offlineStatus} }, {new:true} , function(err,doc) {
     if(err) console.log(err);
     res.send(doc);
   });
