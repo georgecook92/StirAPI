@@ -6,7 +6,7 @@ exports.sendPost = function(req,res,next) {
   const content = req.body.text;
   const offline = req.body.offline;
 
-  if(!title || !user_id || !content || !offline ) {
+  if(!title || !user_id || !content  ) {
     console.log('title', title);
     console.log('id', user_id);
     console.log('text', content);
