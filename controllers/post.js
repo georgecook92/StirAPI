@@ -62,7 +62,7 @@ exports.changeOfflineStatus = function(req,res,next) {
   const offlineStatus = req.body.offlineStatus;
   const query = { "_id": post_id };
 
-  Post.findOneAndUpdate(query, { "offline": offlineStatus  }, function(err,doc) {
+  Post.findOneAndUpdate(query, { "offline": offlineStatus  }, {new:true} function(err,doc) {
     if(err) return next(err);
     res.send(doc);
   });
