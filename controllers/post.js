@@ -32,7 +32,7 @@ exports.sendPost = function(req,res,next) {
 }
 
 exports.getPosts = function(req,res,next) {
-  const user_id = req.get('user_id');
+  const user_id = req.get.params.user_id;
   console.log('user id is', user_id);
   Post.find({"user_id": user_id}, function(err,result) {
     const posts = [];
@@ -52,5 +52,14 @@ exports.getPost = function(req,res,next) {
   const post_id = req.params.post_id;
   Post.find({"_id": post_id}, function(err,result) {
     res.send(result);
+  });
+}
+
+exports.changeOfflineStatus = function(req,res,next) {
+  const post_id = req.params.post_id;
+  const offlineStatus = req.params.offlineStatus;
+  Post.update( { "_id": post_id }, {$set : { offline: offlineStatus} }, {new:true} , function(err,doc) {
+    if(err) console.log(err);
+    res.send(doc);
   });
 }
