@@ -20,5 +20,5 @@ module.exports = function(app) {
   app.put('/changeOfflineStatus', requireAuth, Post.changeOfflineStatus);
 
   app.post('/sendPost', requireAuth, Post.sendPost);
-  app.delete('/deletePost', requireAuth, Post.deletePost);
+  app.post('/deletePost', requireAuth, Post.deletePost);
 }
