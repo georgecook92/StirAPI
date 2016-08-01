@@ -35,6 +35,7 @@ exports.getPosts = function(req,res,next) {
   const user_id = req.query.user_id;
   console.log('user id is', user_id);
   Post.find({"user_id": user_id}, function(err,result) {
+    if(err) { return next(err); }
     const posts = [];
     for (var i = 0; i < result.length; i++) {
       var obj = {};
@@ -51,6 +52,7 @@ exports.getPosts = function(req,res,next) {
 exports.getPost = function(req,res,next) {
   const post_id = req.params.post_id;
   Post.find({"_id": post_id}, function(err,result) {
+    if(err) { return next(err); }
     res.send(result);
   });
 }
@@ -58,8 +60,12 @@ exports.getPost = function(req,res,next) {
 exports.changeOfflineStatus = function(req,res,next) {
   const post_id = req.params.post_id;
   const offlineStatus = req.params.offlineStatus;
-  Post.findOneAndUpdate( { "_id": post_id }, {$set : { offline: offlineStatus} }, {new:true} , function(err,doc) {
-    if(err) console.log(err);
-    res.send(doc);
+  Post.find({"_id": post_id}, function(err,result) {
+    if(err) { return next(err); }
+    doc.offline = offlineStatus;
+    doc.save( function(err,doc) {
+      if(err) { return next(err); }
+      res.send(doc);
+    });
   });
 }
