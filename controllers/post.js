@@ -85,6 +85,7 @@ exports.changeOfflineStatus = function(req,res,next) {
 exports.deletePost = function(req,res,next) {
   const post_id = req.body.post_id;
   const query = { "_id": post_id };
+  console.log(query);
   Post.remove( query, function(err){
     if(err) return next(err);
     res.json({success: true});
