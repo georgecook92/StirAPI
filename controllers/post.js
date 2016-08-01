@@ -62,8 +62,9 @@ exports.changeOfflineStatus = function(req,res,next) {
   const offlineStatus = req.params.offlineStatus;
   Post.find({"_id": post_id}, function(err,result) {
     if(err) { return next(err); }
-    doc.offline = offlineStatus;
-    doc.save( function(err,doc) {
+    result.offline = offlineStatus;
+    
+    result.save( function(err,doc) {
       if(err) { return next(err); }
       res.send(doc);
     });
