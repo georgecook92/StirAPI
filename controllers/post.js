@@ -64,6 +64,20 @@ exports.changeOfflineStatus = function(req,res,next) {
 
   Post.findOneAndUpdate(query, { "offline": offlineStatus  }, {new:true}, function(err,doc) {
     if(err) return next(err);
-    res.send(doc);
+
+    Post.find({"user_id": doc.user_id}, function(err,result) {
+      if(err) { return next(err); }
+      const posts = [];
+      for (var i = 0; i < result.length; i++) {
+        var obj = {};
+        obj.title = result[i].title;
+        obj._id = result[i]._id;
+        obj.offline = result[i].offline;
+        posts.push(obj);
+      }
+      console.log('posts sent back from server: ', posts);
+      res.send(posts);
+    });
+
   });
 }
