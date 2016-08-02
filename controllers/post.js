@@ -26,7 +26,7 @@ exports.sendPost = function(req,res,next) {
   post.save( function(err) {
     if (err) { return next(err); }
 
-    webPush.sendNotification('eCOyKwNkVv0:APA91bFhvnyN2vENHMXmTtivNaiDu1conTGk8Wckuca_DLcdaKfBPoJdfD8DBI5uIsHURv8iQLXZ8QKdWSYJGFshzrhHK2C5fDsOhom1f6FogZCWZy2TEgA2Dij1H6WamsaacEBBAI6_');
+    webPush.sendNotification('dj5LvDmZmQk:APA91bHPUcakO8Gyrq-FHjR-Liu5HnkEuoZhM8avnMSYAFr-V_yMXg-p2BotxK5_wvkfcxgmj_zdy9KX6zUkACr1IiCNnpahyUkc2rEbLWMDXl3coapsgQ46OXQqA5cmmSQIUuy-22ZI');
 
     //respond to request indicating it was succesful
     res.json({success: true});
