@@ -25,21 +25,6 @@ exports.sendPost = function(req,res,next) {
   post.save( function(err) {
     if (err) { return next(err); }
 
-    axios.post('https://gcm-http.googleapis.com/gcm/send', {
-      "to": 'eCOyKwNkVv0:APA91bFhvnyN2vENHMXmTtivNaiDu1conTGk8Wckuca_DLcdaKfBPoJdfD8DBI5uIsHURv8iQLXZ8QKdWSYJGFshzrhHK2C5fDsOhom1f6FogZCWZy2TEgA2Dij1H6WamsaacEBBAI6_'
-    },{
-        headers: {
-          Authorization: 'key=AIzaSyBKXFjFCRA7qKltu1Oa0oKdMQQJCwzghQc',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then( function(response) {
-          console.log('Res from push', response);
-        } )
-        .catch( function(err) {
-          console.log(err);
-        } );
-
     //respond to request indicating it was succesful
     res.json({success: true});
 
