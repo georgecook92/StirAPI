@@ -37,6 +37,7 @@ exports.sendPost = function(req,res,next) {
   const user_id = req.body.user_id;
   const content = req.body.text;
   const offline = req.body.offline;
+  //const user_push_id = req.body.user_push_id;
 
   if(!title || !user_id || !content  ) {
     console.log('title', title);
@@ -60,7 +61,7 @@ exports.sendPost = function(req,res,next) {
       app_id: '04954d84-8b33-4124-98cb-ac53f5abcf1d',
       contents: {"en": "Recipe has been created"},
       headings: { "en" : "Stir Notification" },
-      include_player_ids: ['171a8af8-4649-46de-815b-8f479f6352b6']
+      include_player_ids: ['19716454-d4fe-4847-9276-aadb14c14a3e']
     };
 
     sendNotification(message);
