@@ -1,6 +1,36 @@
 const Post = require('../models/post');
-const webPush = require('web-push');
-webPush.setGCMAPIKey('AIzaSyBKXFjFCRA7qKltu1Oa0oKdMQQJCwzghQc');
+
+var sendNotification = function(data) {
+  var headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Basic ZGE1YTJmOWItOTk3My00Y2IzLWI3YzEtODQzMDJiZGZhN2Nh"
+  };
+
+  var options = {
+    host: "onesignal.com",
+    port: 443,
+    path: "/api/v1/notifications",
+    method: "POST",
+    headers: headers
+  };
+
+  var https = require('https');
+  var req = https.request(options, function(res) {
+    res.on('data', function(data) {
+      console.log("Response:");
+      console.log(JSON.parse(data));
+    });
+  });
+
+  req.on('error', function(e) {
+    console.log("ERROR:");
+    console.log(e);
+  });
+
+  req.write(JSON.stringify(data));
+  req.end();
+};
+
 
 exports.sendPost = function(req,res,next) {
   const title = req.body.title;
@@ -26,7 +56,14 @@ exports.sendPost = function(req,res,next) {
   post.save( function(err) {
     if (err) { return next(err); }
 
-    webPush.sendNotification('dj5LvDmZmQk:APA91bHPUcakO8Gyrq-FHjR-Liu5HnkEuoZhM8avnMSYAFr-V_yMXg-p2BotxK5_wvkfcxgmj_zdy9KX6zUkACr1IiCNnpahyUkc2rEbLWMDXl3coapsgQ46OXQqA5cmmSQIUuy-22ZI');
+    var message = {
+      app_id: '04954d84-8b33-4124-98cb-ac53f5abcf1d',
+      contents: {"en": "Recipe has been created"},
+      headings: { "en" : "Stir Notification" },
+      include_player_ids: ['f30be904-34c2-4d5d-8cc0-942806715c98']
+    };
+
+    sendNotification(message);
 
     //respond to request indicating it was succesful
     res.json({success: true});
