@@ -9,7 +9,7 @@ const LocalStrategy = require('passport-local');
 //create local login strategy
 //uses username as standard - have to change it to look for email
 const localOptions = {usernameField: 'email'};
-const localLogin = new LocalStrategy(localOptions,function(email,password,userPushId,done) {
+const localLogin = new LocalStrategy(localOptions,function(email,password,done) {
   //verify email and password
   //if correct call done with user
   //otherwise call done with false
@@ -17,8 +17,6 @@ const localLogin = new LocalStrategy(localOptions,function(email,password,userPu
   User.findOne( {email: email} , function(err,user) {
     if(err) { return done(err); }
     if (!user) { return done(null, false); }
-
-    console.log('pushId', userPushId);
 
     //compare passwords - are the passwords equal? Stored password is salted and hashed
     user.comparePassword(password, function(err,isMatch) {
