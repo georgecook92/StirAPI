@@ -60,7 +60,7 @@ exports.sendPost = function(req,res,next) {
     if (user_push_id) {
       var message = {
         app_id: '04954d84-8b33-4124-98cb-ac53f5abcf1d',
-        contents: {"en": "Recipe has been created"},
+        contents: {"en": "Your " + title + "Recipe has been created"},
         headings: { "en" : "Stir Notification" },
         include_player_ids: [user_push_id]
       };
