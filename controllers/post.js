@@ -54,7 +54,7 @@ exports.sendPost = function(req,res,next) {
     offline: offline
   });
 
-  post.save( function(err) {
+  post.save( function(err,doc) {
     if (err) { return next(err); }
 
     if (user_push_id) {
@@ -62,7 +62,8 @@ exports.sendPost = function(req,res,next) {
         app_id: '04954d84-8b33-4124-98cb-ac53f5abcf1d',
         contents: {"en": "Your " + title + " recipe has been saved"},
         headings: { "en" : "Stir Notification" },
-        include_player_ids: [user_push_id]
+        include_player_ids: [user_push_id],
+        url: "https://stir-recipe.herokuapp.com/posts/view/" + doc.id
       };
 
       sendNotification(message);
