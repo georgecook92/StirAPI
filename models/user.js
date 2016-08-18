@@ -8,7 +8,9 @@ const userSchema = new Schema({
   password: String,
   firstName: String,
   lastName: String,
-  userPushId: String
+  userPushId: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
 });
 
 //on save hook, encrypt password

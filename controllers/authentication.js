@@ -69,3 +69,38 @@ exports.signup = function(req,res,next) {
 
   });
 }
+
+exports.resetPassword = function(req,res,next) {
+  const oldPassword = req.body.oldPw;
+  const newPassword = req.body.newPw;
+  const email = req.body.email;
+
+  User.findOne( {email: email} , function(err,user) {
+    if(err) { return done(err); }
+    if (!user) { return done(null, false); }
+
+    //compare passwords - are the passwords equal? Stored password is salted and hashed
+    user.comparePassword(oldPassword, function(err,isMatch) {
+
+      if(!isMatch) {
+        res.json( { 'error' : 'Incorrect password' } );
+      } else {
+        user.password = newPassword;
+        user.save( function(err) {
+          if (err) {
+            console.log('error with saving new password', err);
+            res.json( { 'success' : 'false' });
+          } else {
+            res.json( { 'success' : 'true' });
+          }
+
+        } )
+      }
+
+    });
+
+  });
+
+
+
+}
