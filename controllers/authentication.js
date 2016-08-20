@@ -2,8 +2,9 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const jwt = require('jwt-simple');
 const config = require('../config');
-var nodemailer = require('nodemailer');
-var randomstring = require('randomstring');
+const nodemailer = require('nodemailer');
+const sgTransport = require('nodemailer-sendgrid-transport');
+const randomstring = require('randomstring');
 
 //sub refers to the subject fo the token (the user) - iat (issued at time)
 function tokenForUser(user) {
@@ -125,13 +126,15 @@ exports.forgotPassword = function(req,res,next) {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
 
     user.save( function() {
-      var smtpTransport = nodemailer.createTransport('SMTP', {
-        service: 'SendGrid',
+      var options = {
+        //need ENV
         auth: {
-          user: 'Georgecook92',
-          pass: 'osc5Gne^s9tAd25n'
+            api_user: 'Georgecook92',
+            api_key: 'osc5Gne^s9tAd25n'
         }
-      });
+      }
+
+      var mailer = nodemailer.createTransport(sgTransport(options));
 
       var mailOptions = {
         to: user.email,
@@ -143,7 +146,7 @@ exports.forgotPassword = function(req,res,next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
 
-      smtpTransport.sendMail(mailOptions, function(err) {
+      mailer.sendMail(mailOptions, function(err) {
         if (err) {
           return console.log('err', err);
         }
