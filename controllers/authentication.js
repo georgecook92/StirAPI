@@ -113,6 +113,7 @@ exports.resetForgottenPassword = function(req,res,next) {
 
   User.findOne( {resetPasswordToken: token }, function(err,user){
     if (err) {
+      if (err) return res.send(500, { error: err });
       console.log('err from resetForgottenPassword', err);
       return res.json({ 'error': err });
     }
@@ -142,7 +143,7 @@ exports.forgotPassword = function(req,res,next) {
   });
   const newData = {resetPasswordToken: token};
 
-  User.findOneAndUpdate(query, newData, function(err, doc){
+  User.findOneAndUpdate(query, newData, {new: true}, function(err, doc){
     if (err) return res.send(500, { error: err });
 
     var options = {
