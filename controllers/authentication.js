@@ -156,8 +156,9 @@ exports.forgotPassword = function(req,res,next) {
 
       var mailer = nodemailer.createTransport(sgTransport(options));
 
-      var url = 'https://stir-recipe.herokuapp.com';
-
+      //var url = 'https://stir-recipe.herokuapp.com';
+      var url = 'http://localhost:8080/';
+      
       var mailOptions = {
         to: user.email,
         from: 'passwordreset@stir.com',
