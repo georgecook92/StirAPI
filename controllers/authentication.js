@@ -110,7 +110,10 @@ exports.resetPassword = function(req,res,next) {
 exports.forgotPassword = function(req,res,next) {
   const email = req.body.email;
 
+  console.log('email', email);
+
   User.findOne( {email: email} , function(err,user) {
+    console.log('user', user);
     if (!user) {
       return res.json({'error': 'Email Does Not Exist'});
     }
