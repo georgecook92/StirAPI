@@ -156,13 +156,15 @@ exports.forgotPassword = function(req,res,next) {
 
       var mailer = nodemailer.createTransport(sgTransport(options));
 
+      var url = 'https://stir-recipe.herokuapp.com/';
+
       var mailOptions = {
         to: user.email,
         from: 'passwordreset@stir.com',
         subject: 'Stir Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/resetForgottenPassword/' + token + '\n\n' +
+          url + '/resetForgottenPassword/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
 
