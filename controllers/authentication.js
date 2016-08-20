@@ -116,17 +116,25 @@ exports.resetForgottenPassword = function(req,res,next) {
       if (err) return res.send(500, { error: err });
       console.log('err from resetForgottenPassword', err);
       return res.json({ 'error': err });
-    }
-    user.password = newPw;
-    user.resetPasswordToken = undefined;
-    user.save(function(err){
-      if (err) {
-        console.log('error with saving new password', err);
-        res.json( { 'success' : 'false' });
+    } else {
+
+      if (user) {
+        user.password = newPw;
+        user.resetPasswordToken = undefined;
+        user.save(function(err){
+          if (err) {
+            console.log('error with saving new password', err);
+            return res.json( { 'success' : 'false' });
+          } else {
+            return res.json( { 'success' : 'true' });
+          }
+        });
       } else {
-        res.json( { 'success' : 'true' });
+        return res.send(404, { error: 'No user found' })
       }
-    })
+
+    }
+
   });
 
 }
