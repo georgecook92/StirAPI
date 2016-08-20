@@ -23,5 +23,5 @@ module.exports = function(app) {
   app.post('/deletePost', requireAuth, Post.deletePost);
 
   app.post('/resetPassword', Authentication.resetPassword);
-  //app.post('/forgotPassword', Authentication.forgotPassword);
+  app.post('/forgotPassword', Authentication.forgotPassword);
 }
