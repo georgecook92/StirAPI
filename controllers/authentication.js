@@ -2,7 +2,7 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const jwt = require('jwt-simple');
 const config = require('../config');
-var randomstring = require("randomstring");
+const randomstring = require("randomstring");
 const nodemailer = require('nodemailer');
 
 //sub refers to the subject fo the token (the user) - iat (issued at time)
