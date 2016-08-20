@@ -121,7 +121,7 @@ exports.forgotPassword = function(req,res) {
       user.resetPasswordToken = token;
       user.resetPasswordExpires = Date.now() + 3600000; // 1 hour to reset
 
-      user.save().then( function(user) {
+      user.save(function(user) {
         console.log('user',user);
 
         var smtpTransport = nodemailer.createTransport('SMTP', {
@@ -146,10 +146,7 @@ exports.forgotPassword = function(req,res) {
         res.json({'success': 'Email sent'});
       });
 
-      } ).catch( function(err) {
-        console.log('err', err);
-        res.json( {'error': err} );
-      } );
+    })
     }
 
 
