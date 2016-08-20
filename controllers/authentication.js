@@ -159,7 +159,7 @@ exports.forgotPassword = function(req,res,next) {
     var url = 'http://localhost:8080';
 
     var mailOptions = {
-      to: user.email,
+      to: doc.email,
       from: 'passwordreset@stir.com',
       subject: 'Stir Password Reset',
       text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
