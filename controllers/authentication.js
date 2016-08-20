@@ -103,8 +103,26 @@ exports.resetPassword = function(req,res,next) {
     });
 
   });
+}
 
+exports.resetForgottenPassword = function(req,res,next) {
+  const email = req.body.email;
+  const newPw = req.body.newPw;
 
+  User.findOne( {email:email}, function(err,user){
+    if (err) {
+      console.log('err from resetForgottenPassword', err);
+    }
+    user.password = newPw;
+    user.save(function(err){
+      if (err) {
+        console.log('error with saving new password', err);
+        res.json( { 'success' : 'false' });
+      } else {
+        res.json( { 'success' : 'true' });
+      }
+    })
+  });
 
 }
 
@@ -142,7 +160,7 @@ exports.forgotPassword = function(req,res,next) {
         subject: 'Stir Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+          'http://' + req.headers.host + '/resetForgottenPassword/' + token + '\n\n' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
 
