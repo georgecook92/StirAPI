@@ -24,4 +24,5 @@ module.exports = function(app) {
 
   app.post('/resetPassword', Authentication.resetPassword);
   app.post('/forgotPassword', Authentication.forgotPassword);
+  app.post('/resetForgottenPassword', Authentication.resetForgottenPassword);
 }

@@ -108,10 +108,12 @@ exports.resetPassword = function(req,res,next) {
 exports.resetForgottenPassword = function(req,res,next) {
   const email = req.body.email;
   const newPw = req.body.newPw;
+  const token = req.body.token;
 
-  User.findOne( {email:email}, function(err,user){
+  User.findOne( {email:email,  resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } }, function(err,user){
     if (err) {
       console.log('err from resetForgottenPassword', err);
+      return res.json({ 'error': err });
     }
     user.password = newPw;
     user.save(function(err){
