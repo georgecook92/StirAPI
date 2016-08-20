@@ -146,12 +146,10 @@ exports.forgotPassword = function(req,res) {
         res.json({'success': 'Email sent'});
       });
 
-
-
       } ).catch( function(err) {
         console.log('err', err);
         res.json( {'error': err} );
-      } )
+      } );
     }
 
 
