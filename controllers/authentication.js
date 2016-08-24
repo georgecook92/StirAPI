@@ -161,9 +161,11 @@ exports.forgotPassword = function(req,res,next) {
   User.findOneAndUpdate(query, newData, {new: true}, function(err, doc){
     if (err) return res.send(500, { error: err });
 
+    //if no user - send error
     if (!doc) {
       return res.json( { 'error': 'No user with that email' } );
     } else {
+      //send email
       var options = {
         //need ENV
         auth: {
@@ -186,6 +188,7 @@ exports.forgotPassword = function(req,res,next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
 
+      //uses node mailer and send-grid
       mailer.sendMail(mailOptions, function(err) {
         if (err) {
           return console.log('err', err);

@@ -16,6 +16,7 @@ mongoose.connect(dbUrl);
 //logging framework
 app.use(morgan('combined'));
 
+//cors cover
 app.use( cors() );
 
 //parses incoming requests - into JSON

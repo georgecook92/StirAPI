@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 
+//sends push notification
 var sendNotification = function(data) {
   var headers = {
     "Content-Type": "application/json",
@@ -31,7 +32,7 @@ var sendNotification = function(data) {
   req.end();
 };
 
-
+//sends posts to db
 exports.sendPost = function(req,res,next) {
   const title = req.body.title;
   const user_id = req.body.user_id;
@@ -39,6 +40,7 @@ exports.sendPost = function(req,res,next) {
   const offline = req.body.offline;
   const user_push_id = req.body.user_push_id;
 
+  //validation check
   if(!title || !user_id || !content  ) {
     console.log('title', title);
     console.log('id', user_id);
@@ -47,6 +49,7 @@ exports.sendPost = function(req,res,next) {
     return res.status(422).send( { error: "All fields must be provided" } );
   }
 
+  //creates new Post object - Mongoose
   const post = new Post({
     title: title,
     user_id: user_id,
@@ -54,6 +57,7 @@ exports.sendPost = function(req,res,next) {
     offline: offline
   });
 
+  //saves post and sends push notification if the users has a push id
   post.save( function(err,doc) {
     if (err) { return next(err); }
 
@@ -76,9 +80,11 @@ exports.sendPost = function(req,res,next) {
 
 }
 
+//gets posts - returns them in the expected format
 exports.getPosts = function(req,res,next) {
   const user_id = req.query.user_id;
   console.log('user id is', user_id);
+  //mongoose
   Post.find({"user_id": user_id}, function(err,result) {
     if(err) { return next(err); }
     const posts = [];
@@ -96,6 +102,7 @@ exports.getPosts = function(req,res,next) {
   });
 }
 
+//get individual post
 exports.getPost = function(req,res,next) {
   const post_id = req.params.post_id;
   Post.find({"_id": post_id}, function(err,result) {
@@ -104,14 +111,17 @@ exports.getPost = function(req,res,next) {
   });
 }
 
+//changes offline status of post
 exports.changeOfflineStatus = function(req,res,next) {
   const post_id = req.body.post_id;
   const offlineStatus = req.body.offlineStatus;
   const query = { "_id": post_id };
 
+  //mongoose. Updates the posts offline status
+  // new:true ensures that the new document is returned
   Post.findOneAndUpdate(query, { "offline": offlineStatus  }, {new:true}, function(err,doc) {
     if(err) return next(err);
-
+    //returns updated posts
     Post.find({"user_id": doc.user_id}, function(err,result) {
       if(err) { return next(err); }
       const posts = [];
@@ -131,6 +141,7 @@ exports.changeOfflineStatus = function(req,res,next) {
   });
 }
 
+//delete post
 exports.deletePost = function(req,res,next) {
   var post_id = req.body.post_id;
   const query = { "_id": post_id };
