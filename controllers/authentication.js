@@ -6,14 +6,14 @@ const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
 const randomstring = require('randomstring');
 
-//sub refers to the subject fo the token (the user) - iat (issued at time)
+//sub refers to the subject of the token (the user) - iat (issued at time)
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
   return jwt.encode({ sub: user.id , iat: timestamp },config.secret);
 }
 
 exports.signin = function(req,res,next) {
-  //user has already had their email and password auth'd
+  //user has already had their email and password auth'd through passport
   //just need to give them a token
 
   //req.user comes from the done method in passport local
@@ -73,21 +73,26 @@ exports.signup = function(req,res,next) {
   });
 }
 
+
+/******************** RESET PASSWORD IF USER KNOWS IT   ********************/
 exports.resetPassword = function(req,res,next) {
   const oldPassword = req.body.oldPw;
   const newPassword = req.body.newPw;
   const email = req.body.email;
 
+  //find user with that email
   User.findOne( {email: email} , function(err,user) {
     if(err) { return done(err); }
     if (!user) { return done(null, false); }
 
+    //checks the stated password matches
     //compare passwords - are the passwords equal? Stored password is salted and hashed
     user.comparePassword(oldPassword, function(err,isMatch) {
 
       if(!isMatch) {
         res.json( { 'error' : 'Incorrect password' } );
       } else {
+        //if they do match, change the password
         user.password = newPassword;
         user.save( function(err) {
           if (err) {
@@ -105,6 +110,7 @@ exports.resetPassword = function(req,res,next) {
   });
 }
 
+/******************** RESET PASSWORD IF USER HAS FORGOTTEN IT   ********************/
 exports.resetForgottenPassword = function(req,res,next) {
   const newPw = req.body.newPw;
   const token = req.body.token;
@@ -139,6 +145,7 @@ exports.resetForgottenPassword = function(req,res,next) {
 
 }
 
+/******************** SENDS EMAIL TO USER WHO HAS FORGOTTEN PASSWORD   ********************/
 exports.forgotPassword = function(req,res,next) {
   const email = req.body.email;
 
@@ -154,80 +161,39 @@ exports.forgotPassword = function(req,res,next) {
   User.findOneAndUpdate(query, newData, {new: true}, function(err, doc){
     if (err) return res.send(500, { error: err });
 
-    var options = {
-      //need ENV
-      auth: {
-          api_user: 'Georgecook92',
-          api_key: 'osc5Gne^s9tAd25n'
+    if (!doc) {
+      return res.json( { 'error': 'No user with that email' } );
+    } else {
+      var options = {
+        //need ENV
+        auth: {
+            api_user: 'Georgecook92',
+            api_key: 'osc5Gne^s9tAd25n'
+        }
       }
+
+      var mailer = nodemailer.createTransport(sgTransport(options));
+
+      var url = 'https://stir-recipe.herokuapp.com';
+
+      var mailOptions = {
+        to: doc.email,
+        from: 'passwordreset@stir.com',
+        subject: 'Stir Password Reset',
+        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+          'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+          url + '/resetForgottenPassword/' + token + '\n\n' +
+          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+      };
+
+      mailer.sendMail(mailOptions, function(err) {
+        if (err) {
+          return console.log('err', err);
+        }
+        return res.json( { 'success': 'Email has been sent' } );
+
+      });
     }
-
-    var mailer = nodemailer.createTransport(sgTransport(options));
-
-    var url = 'https://stir-recipe.herokuapp.com';
-
-    var mailOptions = {
-      to: doc.email,
-      from: 'passwordreset@stir.com',
-      subject: 'Stir Password Reset',
-      text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-        'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-        url + '/resetForgottenPassword/' + token + '\n\n' +
-        'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-    };
-
-    mailer.sendMail(mailOptions, function(err) {
-      if (err) {
-        return console.log('err', err);
-      }
-      return res.json( { 'success': 'Email has been sent' } );
-
-    });
 });
 
-  // User.findOne( {email: email} , function(err,user) {
-  //   console.log('user', user);
-  //   if (!user) {
-  //     return res.json({'error': 'Email Does Not Exist'});
-  //   }
-  //   const token = randomstring.generate({
-  //     length: 20,
-  //     charset: 'hex'
-  //   });
-  //   user.resetPasswordToken = token;
-  //
-  //   user.save( function() {
-  //     var options = {
-  //       //need ENV
-  //       auth: {
-  //           api_user: 'Georgecook92',
-  //           api_key: 'osc5Gne^s9tAd25n'
-  //       }
-  //     }
-  //
-  //     var mailer = nodemailer.createTransport(sgTransport(options));
-  //
-  //     //var url = 'https://stir-recipe.herokuapp.com';
-  //     var url = 'http://localhost:8080';
-  //
-  //     var mailOptions = {
-  //       to: user.email,
-  //       from: 'passwordreset@stir.com',
-  //       subject: 'Stir Password Reset',
-  //       text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-  //         'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-  //         url + '/resetForgottenPassword/' + token + '\n\n' +
-  //         'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-  //     };
-  //
-  //     mailer.sendMail(mailOptions, function(err) {
-  //       if (err) {
-  //         return console.log('err', err);
-  //       }
-  //       return res.json( { 'success': 'Email has been sent' } );
-  //
-  //     });
-  //
-  //   } )
-  // })
 }
