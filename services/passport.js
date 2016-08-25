@@ -22,6 +22,7 @@ const localLogin = new LocalStrategy(localOptions,function(email,password,done) 
     user.comparePassword(password, function(err,isMatch) {
       if(err) { return done(err); }
 
+      //if no match - sends back a 401 unauthorised (passport does this)
       if(!isMatch) { return done(null, false); }
       console.log(user);
 
